@@ -8,7 +8,6 @@ using restful.UserAndTodoList.Model;
 namespace restful.UserAndTodoList.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("v1/[controller]")]
     public class CrudController : ControllerBase
     {
