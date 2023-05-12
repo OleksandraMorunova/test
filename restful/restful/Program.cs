@@ -9,6 +9,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDbGenericRepository;
 using restful.Auth.Config;
 using restful.Auth.Repository;
+using restful.Auth.Service;
 using restful.Auth.UserAndTodoList.Services;
 using restful.UserAndTodoList.Repository;
 using restful.UserAndTodoList.Services;
@@ -24,7 +25,9 @@ BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.Bson
 builder.Services.AddTransient<ICrudRepository, UserRepository>();
 builder.Services.AddTransient<ICrudService, CrudService>();
 builder.Services.AddTransient<ITodoListRepository, TodoListRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddTransient<ITodoListService, TodoListService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<TodoListRepository>();

@@ -48,7 +48,6 @@ namespace restful.UserAndTodoList.Repository
                     {
                         Email = user.Email,
                         Password = user.Password,
-                        Username = user.UserName
                     };
 
                     us = new ApplicationUser

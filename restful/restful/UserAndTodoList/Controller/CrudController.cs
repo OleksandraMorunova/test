@@ -13,7 +13,6 @@ namespace restful.UserAndTodoList.Controller
     public class CrudController : ControllerBase
     {
         private readonly ICrudService _service;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
 
         public CrudController(ICrudService service)
         {

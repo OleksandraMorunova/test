@@ -14,15 +14,12 @@ namespace restful.Auth.Controller
     [Route("auth")]
     public class HomeController : ControllerBase
     { 
-        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IAuthService _service;
 
-        public HomeController(RoleManager<ApplicationRole> roleManager, IAuthService service)
+        public HomeController(IAuthService service)
         {
-            _roleManager = roleManager;
             _service = service;
         }
-
 
         [HttpPost("login")]
         [AllowAnonymous]
