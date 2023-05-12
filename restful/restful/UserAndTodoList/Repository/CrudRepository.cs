@@ -54,7 +54,7 @@ namespace restful.UserAndTodoList.Repository
                     {
                         Email = u.Email,
                         UserName = u.Email,
-                        FullName = u.Username,
+                        FullName = u.Email,
                         ConcurrencyStamp = Guid.NewGuid().ToString()
                     };
                     var createUsers = await _userManager.CreateAsync(us, u.Password);
@@ -95,14 +95,13 @@ namespace restful.UserAndTodoList.Repository
                 {
                     Email = user.Email.Equals(null) ? us.Email : user.Email,
                     Password = user.Password.Equals(null) ? us.PasswordHash : user.Password,
-                    Username = user.UserName.Equals(null) ? us.UserName : user.UserName
                 };
 
                 var newUs = new ApplicationUser
                 {
                     Email = u.Email,
-                    UserName = u.Username,
-                    FullName = u.Username,
+                    UserName = u.Email,
+                    FullName = u.Email,
                     ConcurrencyStamp = Guid.NewGuid().ToString()
                 };
                 var rp = await _userManager.RemovePasswordAsync(us);
