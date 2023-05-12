@@ -21,7 +21,7 @@ namespace restful.UserAndTodoList.Controller
         [Authorize]
         public async Task CreateAsync([FromRoute] string userId, TodoListModel model)
         {
-            await _service.CreateAsync(model);
+            await _service.CreateAsync(userId,model);
         }
 
         [HttpDelete("/todo/delete/{id}")]

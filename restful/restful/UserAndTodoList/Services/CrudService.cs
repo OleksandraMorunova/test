@@ -34,14 +34,14 @@ namespace restful.UserAndTodoList.Services
             return await _repository.GetListUserByUsername(username);
         }
 
-        public async Task Create(string userId, UserModel user)
+        public async Task Create(UserModel user)
         {
             UserModel newModel = new UserModel();
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
                 throw new ArgumentException("Email is null, but it shouldn't be");
             }
-            await _repository.Create(parseStringToObjectId(id), user);
+            await _repository.Create(user);
         }
 
         public async Task<bool> Upload(IFormFile file, string id)

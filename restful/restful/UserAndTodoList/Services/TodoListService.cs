@@ -13,9 +13,9 @@ namespace restful.UserAndTodoList.Services
             _repository = repository;
         }
 
-        public async Task CreateAsync(TodoListModel model)
+        public async Task CreateAsync(string id, TodoListModel model)
         {
-            await _repository.CreateAsync(model);
+            await _repository.CreateAsync(parseStringToObjectId(id), model);
         }
 
         public async Task<bool> DeleteAsync(string id)
