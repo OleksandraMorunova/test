@@ -12425,11 +12425,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\restful\\restful\\restful.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\test\\restful\\restful\\restful.csproj",
       "projectName": "restful",
-      "projectPath": "C:\\Users\\User\\Desktop\\restful\\restful\\restful.csproj",
+      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\test\\restful\\restful\\restful.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\restful\\restful\\obj\\",
+      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\test\\restful\\restful\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",

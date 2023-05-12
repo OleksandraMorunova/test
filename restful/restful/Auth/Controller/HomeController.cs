@@ -7,8 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using restful.Auth.Model;
 using System.Linq;
+using restful.Auth.Config;
 
-namespace restful.Auth.Config.Controller
+namespace restful.Auth.Controller
 {
     [ApiController]
     [Route("auth")]
@@ -20,9 +21,9 @@ namespace restful.Auth.Config.Controller
         public HomeController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
-            _roleManager = roleManager; 
+            _roleManager = roleManager;
         }
-   
+
 
         [HttpPost("login")]
         [AllowAnonymous]
@@ -30,7 +31,7 @@ namespace restful.Auth.Config.Controller
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {            
+            {
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
@@ -40,7 +41,7 @@ namespace restful.Auth.Config.Controller
 
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var role = userRoles.Select(x => new Claim(ClaimTypes.Role, x));
-                authClaims.AddRange(role);           
+                authClaims.AddRange(role);
 
                 var token = GetToken(authClaims);
 
@@ -62,10 +63,10 @@ namespace restful.Auth.Config.Controller
 
             var token = new JwtSecurityToken(
                  issuer: "http://localhost:7173",
-                 audience: "http://localhost:7173",           
+                 audience: "http://localhost:7173",
                  authClaims,
                  expires: DateTime.Now.AddMonths(2),
-                 signingCredentials: credentials             
+                 signingCredentials: credentials
                 );
 
             return token;
