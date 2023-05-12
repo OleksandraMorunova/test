@@ -54,7 +54,7 @@ namespace restful.UserAndTodoList.Repository
                     us = new ApplicationUser
                     {
                         Email = u.Email,
-                        UserName = u.Username,
+                        UserName = u.Email,
                         FullName = u.Username,
                         ConcurrencyStamp = Guid.NewGuid().ToString()
                     };
