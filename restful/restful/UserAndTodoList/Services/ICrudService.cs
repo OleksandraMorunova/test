@@ -7,7 +7,7 @@ namespace restful.Auth.UserAndTodoList.Services
     {
         public Task<UserModel> GetById(string id);
         public Task<List<UserModel>> GetListUserByUserName(string username);
-        public Task Create(UserModel user);
+        public Task Create(string userId, UserModel user);
         public Task<bool> Update(string id, UserModel user);
         public Task<bool> Delete(string id);
         public Task<bool> Upload(IFormFile file, string id);

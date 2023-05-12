@@ -18,8 +18,9 @@ namespace restful.Auth.Repository
         }
 
 
-        public async Task CreateAsync(TodoListModel model)
+        public async Task CreateAsync(ObjectId id, TodoListModel model)
         {
+            model.UserId = id;
             await _mongoCollection.InsertOneAsync(model);
         }
 

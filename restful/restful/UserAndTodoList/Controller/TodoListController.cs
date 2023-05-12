@@ -17,9 +17,9 @@ namespace restful.UserAndTodoList.Controller
             _service = service;
         }
 
-        [HttpPost("/todo/create")]
+        [HttpPost("/todo/create/{userId}")]
         [Authorize]
-        public async Task CreateAsync(TodoListModel model)
+        public async Task CreateAsync([FromRoute] string userId, TodoListModel model)
         {
             await _service.CreateAsync(model);
         }

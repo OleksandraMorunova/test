@@ -34,23 +34,19 @@ namespace restful.UserAndTodoList.Services
             return await _repository.GetListUserByUsername(username);
         }
 
-        public async Task Create(UserModel user)
+        public async Task Create(string userId, UserModel user)
         {
             UserModel newModel = new UserModel();
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
             {
                 throw new ArgumentException("Email is null, but it shouldn't be");
             }
-            await _repository.Create(user);
+            await _repository.Create(parseStringToObjectId(id), user);
         }
 
         public async Task<bool> Upload(IFormFile file, string id)
         {
-            if (!ObjectId.TryParse(id, out var objectId))
-            {
-                throw new ArgumentException("Inputing data is not string");
-            }
-            return await _repository.Upload(file, objectId);
+            return await _repository.Upload(file, parseStringToObjectId(id));
         }
 
         public async Task<byte[]> FindFileByIdAsync(string id)

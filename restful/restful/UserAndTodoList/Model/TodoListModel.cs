@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
+using MongoDB.Bson.Serialization;
 
 namespace restful.UserAndTodoList.Model
 {
@@ -10,6 +11,7 @@ namespace restful.UserAndTodoList.Model
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
 
+        [BsonId]
         [BsonElement("user_id")]
         [JsonPropertyName("user_id")]
         public ObjectId? UserId { get; set; }
