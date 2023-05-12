@@ -11,7 +11,6 @@ namespace restful.UserAndTodoList.Model
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
 
-        [BsonId]
         [BsonElement("user_id")]
         [JsonPropertyName("user_id")]
         public ObjectId? UserId { get; set; }
