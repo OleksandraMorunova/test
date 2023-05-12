@@ -69,6 +69,13 @@ namespace restful.UserAndTodoList.Repository
                     {
                         _logger.LogError($"{e.Message}");
                     }
+
+                    var salt = BCrypt.Net.BCrypt.GenerateSalt();
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
+                    user.Password = hashedPassword;
+                    user.CreatedUserTime = DateTime.UtcNow;
+
+                    await _mongoCollection.InsertOneAsync(user);
                 }
             }
             catch (Exception ex)
@@ -77,12 +84,6 @@ namespace restful.UserAndTodoList.Repository
                 _logger.LogError("Exeption. User doesn't created for login", ex.ToString());
             }
 
-            var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
-            user.Password = hashedPassword;
-            user.CreatedUserTime = DateTime.UtcNow;
-
-            await _mongoCollection.InsertOneAsync(user);
         }
 
         public async Task<bool> Update(ObjectId id, UserModel user)
