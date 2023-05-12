@@ -6,6 +6,7 @@ namespace restful.Auth
     public class LoginRequest
     {
         [Required]
+        [EmailAddress(ErrorMessage = "Invalide email address")]
         public string Email { get; set; } = string.Empty;
 
         [Required]

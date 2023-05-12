@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using restful.Auth.Repository;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace restful.Auth.Service
@@ -6,11 +7,11 @@ namespace restful.Auth.Service
     public class AuthService : IAuthService
     {
 
-        private readonly IAuthRpositorye _repository;
+        private readonly IAuthRepository _repository;
 
-        public AuthService(IAuthService service)
+        public AuthService(IAuthRepository repositor)
         {
-            _repository = service;
+            _repository = repositor;
         }
 
         public async Task<JwtSecurityToken> GetToken(LoginRequest model)
@@ -19,7 +20,7 @@ namespace restful.Auth.Service
         }
         public async Task<bool> СreateRole(RoleRequest request)
         {
-            return await _repository.CreateRole(request);
+            return await _repository.СreateRole(request);
         }
     }
 }

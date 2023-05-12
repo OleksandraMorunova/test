@@ -5,23 +5,22 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using restful.Auth.Model;
-using System.Linq;
 using restful.Auth.Config;
+using restful.Auth.Service;
 
 namespace restful.Auth.Controller
 {
     [ApiController]
     [Route("auth")]
     public class HomeController : ControllerBase
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
+    { 
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IAuthService _service;
 
-        public HomeController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        public HomeController(RoleManager<ApplicationRole> roleManager, IAuthService service)
         {
-            _userManager = userManager;
             _roleManager = roleManager;
+            _service = service;
         }
 
 
@@ -29,57 +28,35 @@ namespace restful.Auth.Controller
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            var token = await _service.GetToken(model);
+            if(token != null)
             {
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var role = userRoles.Select(x => new Claim(ClaimTypes.Role, x));
-                authClaims.AddRange(role);
-
-                var token = GetToken(authClaims);
-
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
                     message = "Succesfully"
                 });
-            }
-
+            }                       
             return Unauthorized();
         }
-
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
-        {
-            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("606c8c855a7ca2e747d9e358e55cb941"));
-            var credentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256Signature);
-
-            var token = new JwtSecurityToken(
-                 issuer: "http://localhost:7173",
-                 audience: "http://localhost:7173",
-                 authClaims,
-                 expires: DateTime.Now.AddMonths(2),
-                 signingCredentials: credentials
-                );
-
-            return token;
-        }
-
 
         [HttpPost("/create/role")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> СreateRole(RoleRequest request)
         {
-            var role = new ApplicationRole { Name = request.RoleName };
-            var result = await _roleManager.CreateAsync(role);
-            return Ok();
+            var result = await _service.СreateRole(request);
+            if (result.Equals(true))
+            {
+                return Ok(new
+                {
+                    message = "Succesfully"
+                });
+            }
+            return BadRequest(new 
+            {
+                message = "Unsuccesfully"
+            });
         }
     }
 }
