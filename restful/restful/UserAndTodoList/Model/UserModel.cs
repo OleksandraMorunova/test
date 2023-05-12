@@ -14,20 +14,17 @@ namespace restful.UserAndTodoList.Model
 
         [BsonElement("username")]
         [JsonPropertyName("username")]
-        [Required]
         public string? UserName { get; set; }
 
         [BsonElement("email")]
         [JsonPropertyName("email")]
         [EmailAddress(ErrorMessage = "Invalide email address")]
-        [Required]
         public string? Email { get; set; }
 
         [BsonElement("password")]
         [JsonPropertyName("password")]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
-        [Required]
         public string? Password { get; set; }
 
         [BsonElement("datetime_creatin_user")]
@@ -44,7 +41,6 @@ namespace restful.UserAndTodoList.Model
 
         [BsonElement("roles")]
         [JsonPropertyName("roles")]
-        [Required]
         public string? Roles { get; set; }
     }
 }

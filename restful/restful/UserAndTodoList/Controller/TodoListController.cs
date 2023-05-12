@@ -31,10 +31,10 @@ namespace restful.UserAndTodoList.Controller
             return await _service.DeleteAsync(id);
         }
 
-        [HttpGet("/todo/get/list/{id}")]
-        public async Task<IEnumerable<TodoListModel>> GetAllAsync([FromRoute] string id)
+        [HttpGet("/todo/get/list/{idUser}")]
+        public async Task<IEnumerable<TodoListModel>> GetAllAsync([FromRoute] string idUser)
         {
-            return await _service.GetAllAsync(id);
+            return await _service.GetAllAsync(idUser);
         }
 
         [HttpGet("/todo/get/{id}")]

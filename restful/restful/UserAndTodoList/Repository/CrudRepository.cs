@@ -87,42 +87,67 @@ namespace restful.UserAndTodoList.Repository
 
         public async Task<bool> Update(ObjectId id, UserModel user)
         {
+            var exist = await GetById(id);
             if (user.UserName != null || user.Email != null || user.Password != null)
             {
-                var us = await _userManager.FindByEmailAsync(user.Email);
 
-                var u = new CreatedRequest
+                var us = await _userManager.FindByEmailAsync(exist.Email);
+
+                if (user != null)
                 {
-                    Email = user.Email.Equals(null) ? us.Email : user.Email,
-                    Password = user.Password.Equals(null) ? us.PasswordHash : user.Password,
-                };
+                    if(user.Email == null || user.Email == us.UserName)
+                    {
+                        us.UserName = us.Email;
+                        us.Email = us.Email;
+                        us.FullName = us.Email;
+                    }
+                    else
+                    {  
+                        us.UserName = user.Email;
+                        us.Email = user.Email;
+                        us.FullName = user.Email;
+                    }
+             
 
-                var newUs = new ApplicationUser
-                {
-                    Email = u.Email,
-                    UserName = u.Email,
-                    FullName = u.Email,
-                    ConcurrencyStamp = Guid.NewGuid().ToString()
-                };
-                var rp = await _userManager.RemovePasswordAsync(us);
-                var ap = await _userManager.AddPasswordAsync(us, user.Password);
+                    if (!string.IsNullOrEmpty(user.Password))
+                    {
+                        var removeResult = await _userManager.RemovePasswordAsync(us);
+                        if (removeResult.Succeeded)
+                        {
+                            var addResult = await _userManager.AddPasswordAsync(us, user.Password);
+                            if (!addResult.Succeeded)
+                            {
+                                // обробка помилки додавання паролю
+                            }
+                        }
+                        else
+                        {
+                            // обробка помилки видалення паролю
+                        }
+                    }
 
-                var createUsers = await _userManager.UpdateAsync(us);
+                    var result = await _userManager.UpdateAsync(us);
+                    if (result.Succeeded)
+                    {
+                        // успішно оновлено
+                    }
+                }
             }
-
+                    
             var filter = Builders<UserModel>.Filter.Eq(s => s.Id, id);
             if (user != null)
-            {
-                var exist = await GetById(id);
+                {
+
                 var update = Builders<UserModel>.Update.Combine()
                     .Set(u => u.UserName, user.UserName ?? exist.UserName)
                     .Set(u => u.Email, user.Email ?? exist.Email)
                     .Set(u => u.DateOfBirth, user.DateOfBirth.Equals(null) ? exist.DateOfBirth : user.DateOfBirth)
-                    .Set(u => u.LinkToProfileIcon, user.LinkToProfileIcon ??  exist.LinkToProfileIcon);
+                    .Set(u => u.LinkToProfileIcon, user.LinkToProfileIcon ?? exist.LinkToProfileIcon);
 
-                    var result = await _mongoCollection.UpdateOneAsync(filter, update);
-                    return result.ModifiedCount > 0;                
+               var result = await _mongoCollection.UpdateOneAsync(filter, update);
+               return result.ModifiedCount > 0;
             }
+            
             return false;
         }
 
