@@ -88,52 +88,33 @@ namespace restful.UserAndTodoList.Repository
         public async Task<bool> Update(ObjectId id, UserModel user)
         {
             var exist = await GetById(id);
-            if (user.UserName != null || user.Email != null || user.Password != null)
+            if(user.Email != null)
             {
-
                 var us = await _userManager.FindByEmailAsync(exist.Email);
-
-                if (user != null)
+                if (user.Password != null)
                 {
-                    if(user.Email == null || user.Email == us.UserName)
-                    {
-                        us.UserName = us.Email;
-                        us.Email = us.Email;
-                        us.FullName = us.Email;
-                    }
-                    else
-                    {  
-                        us.UserName = user.Email;
-                        us.Email = user.Email;
-                        us.FullName = user.Email;
-                    }
-             
+                    var rp = await _userManager.RemovePasswordAsync(us);
+                    var ap = await _userManager.AddPasswordAsync(us, user.Password);
+                }
+                if(us != null)
+                {
+                    us.UserName = user.Email ?? us.Email;
+                    us.Email = user.Email ?? us.Email;
+                    us.FullName = user.Email ?? us.Email;
+                }
 
-                    if (!string.IsNullOrEmpty(user.Password))
-                    {
-                        var removeResult = await _userManager.RemovePasswordAsync(us);
-                        if (removeResult.Succeeded)
-                        {
-                            var addResult = await _userManager.AddPasswordAsync(us, user.Password);
-                            if (!addResult.Succeeded)
-                            {
-                                // обробка помилки додавання паролю
-                            }
-                        }
-                        else
-                        {
-                            // обробка помилки видалення паролю
-                        }
-                    }
-
-                    var result = await _userManager.UpdateAsync(us);
-                    if (result.Succeeded)
-                    {
-                        // успішно оновлено
-                    }
+                var result = await _userManager.UpdateAsync(us);
+            }
+            if(user.Password != null && user.Email == null)
+            {
+                var us = await _userManager.FindByEmailAsync(exist.Email);
+                if(us != null)
+                {
+                    var rp = await _userManager.RemovePasswordAsync(us);
+                    var ap = await _userManager.AddPasswordAsync(us, user.Password);
                 }
             }
-                    
+
             var filter = Builders<UserModel>.Filter.Eq(s => s.Id, id);
             if (user != null)
                 {
